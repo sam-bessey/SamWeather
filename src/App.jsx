@@ -40,6 +40,7 @@ import {
     SeparatorHorizontal,
     X,
     Ellipsis,
+    Settings,
 } from "lucide-react";
 import * as SunCalc from "suncalc";
 import {
@@ -48,6 +49,7 @@ import {
     fetchLocation,
     calcAstro,
 } from "./fetch.js";
+import SettingsPage from "./Settings.jsx";
 import "./styles.css";
 import Bridge from "/src/icons/bridge.svg";
 import Island from "/src/icons/island.svg";
@@ -60,7 +62,7 @@ function MenuItem({ icon, name, onClick }) {
     // name: its the name
     // onClick: what do do when clicking this
     return (
-        <div className="flex" onClick={onClick}>
+        <div className="flex p-2" onClick={onClick}>
             <div className="scale-80 mt-0.5">{icon}</div>
             <h2 className="text-[1px] ml-2">{name}</h2>
         </div>
@@ -80,7 +82,7 @@ function Menu({ children }) {
                     transition: { duration: 0.5 },
                 },
             }}
-            className="fixed z-51 bg-transparent backdrop-blur-3xl top-11 right-0 m-5 p-2 rounded-3xl"
+            className="fixed z-51 bg-transparent backdrop-blur-xl top-11 right-0 m-5 p-2 rounded-3xl"
         >
             {children}
         </motion.div>
@@ -275,7 +277,7 @@ function SearchBar({
     );
 }
 
-function TitleBar({ setData, setAlerts, setLoading }) {
+function TitleBar({ setData, setAlerts, setLoading, setSettingsOpen }) {
     const [searching, setSearching] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
 
@@ -300,7 +302,11 @@ function TitleBar({ setData, setAlerts, setLoading }) {
             {searching && <div className="w-full h-full" hidden></div>}
             {menuOpen && (
                 <Menu hidden>
-                    <MenuItem icon={<Earth />} name="test"></MenuItem>
+                    <MenuItem
+                        icon={<Settings />}
+                        name="Settings"
+                        onClick={() => setSettingsOpen(true)}
+                    ></MenuItem>
                 </Menu>
             )}
         </div>
@@ -740,6 +746,7 @@ export default function App() {
     const [alerts, setAlerts] = useState(null);
     const [selectedDay, setSelectedDay] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [settingsOpen, setSettingsOpen] = useState(false);
 
     useEffect(() => {
         // Get weather on startup
@@ -788,10 +795,12 @@ export default function App() {
     return (
         <div className="relative m-0 p-0 flex flex-col overflow-hidden text-black dark:text-white">
             <Loading hidden={loading}></Loading>
+            <SettingsPage />
             <TitleBar
                 setData={setData}
                 setAlerts={setAlerts}
                 setLoading={setLoading}
+                setSettingsOpen={setSettingsOpen}
             ></TitleBar>
             <div className="mt-10"></div>
 
